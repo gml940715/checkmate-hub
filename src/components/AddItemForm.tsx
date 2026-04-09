@@ -10,6 +10,7 @@ interface Props {
 }
 
 export const AddItemForm = ({ onAdded, categories }: Props) => {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState(categories[0] || "");
