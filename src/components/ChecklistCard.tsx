@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { CheckItem } from "@/pages/Index";
 import { cn } from "@/lib/utils";
-import { Check, Trash2 } from "lucide-react";
+import { Heart, Trash2 } from "lucide-react";
 
 interface Props {
   item: CheckItem;
@@ -35,14 +35,16 @@ export const ChecklistCard = ({ item, onToggle, onMemoChange, onDelete }: Props)
       <div className="flex items-center gap-3">
         <button
           onClick={() => onToggle(item.id)}
-          className={cn(
-            "flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all",
-            item.checked
-              ? "bg-primary border-primary"
-              : "border-muted-foreground/40 hover:border-primary/60"
-          )}
+          className="flex-shrink-0 transition-transform active:scale-90"
         >
-          {item.checked && <Check className="w-4 h-4 text-primary-foreground" />}
+          <Heart
+            className={cn(
+              "w-6 h-6 transition-all",
+              item.checked
+                ? "fill-primary text-primary"
+                : "fill-none text-muted-foreground/40 hover:text-primary/60"
+            )}
+          />
         </button>
         <span
           className={cn(
