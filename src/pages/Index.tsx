@@ -51,9 +51,26 @@ const Index = () => {
       <div className="space-y-6 mt-6">
         {categories.map((cat) => (
           <div key={cat}>
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
-              {cat}
-            </h2>
+            <div className="flex items-center justify-between mb-3 px-1">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                {cat}
+              </h2>
+              {(() => {
+                const catItems = items.filter((i) => i.category === cat);
+                const catDone = catItems.filter((i) => i.checked).length;
+                return (
+                  <div className="flex items-center gap-2">
+                    <div className="w-20 h-1.5 rounded-full bg-muted overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-primary transition-all duration-500"
+                        style={{ width: `${Math.round((catDone / catItems.length) * 100)}%` }}
+                      />
+                    </div>
+                    <span className="text-xs text-muted-foreground">{catDone}/{catItems.length}</span>
+                  </div>
+                );
+              })()}
+            </div>
             <div className="space-y-3">
               {filtered
                 .filter((i) => i.category === cat)
