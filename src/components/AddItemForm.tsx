@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { Plus, X } from "lucide-react";
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export const AddItemForm = ({ onAdded, categories }: Props) => {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState(categories[0] || "");
@@ -20,7 +22,7 @@ export const AddItemForm = ({ onAdded, categories }: Props) => {
     const finalCategory = newCategory.trim() || category;
     if (!title.trim() || !finalCategory) return;
     setSaving(true);
-    await supabase.from("checklist_items").insert({ title: title.trim(), category: finalCategory });
+    await supabase.from("checklist_items").insert({ title: title.trim(), category: finalCategory, user_id: user!.id });
     setTitle("");
     setNewCategory("");
     setSaving(false);
