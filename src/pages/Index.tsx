@@ -110,7 +110,7 @@ const Index = () => {
                         collapsed[cat] ? "-rotate-90" : ""
                       }`}
                     />
-                    <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                    <h2 className="text-sm font-semibold text-category uppercase tracking-wider">
                       {cat}
                     </h2>
                   </div>
