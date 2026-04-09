@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import type { CheckItem } from "@/pages/Index";
 import { cn } from "@/lib/utils";
 import { Heart, Trash2 } from "lucide-react";
+import { format } from "date-fns";
 
 interface Props {
   item: CheckItem;
@@ -46,14 +47,21 @@ export const ChecklistCard = ({ item, onToggle, onMemoChange, onDelete }: Props)
             )}
           />
         </button>
-        <span
-          className={cn(
-            "flex-1 text-sm font-medium transition-colors",
-            item.checked ? "text-muted-foreground line-through" : "text-card-foreground"
+        <div className="flex-1 min-w-0">
+          <span
+            className={cn(
+              "text-sm font-medium transition-colors",
+              item.checked ? "text-muted-foreground line-through" : "text-card-foreground"
+            )}
+          >
+            {item.title}
+          </span>
+          {item.checked && item.updated_at && (
+            <span className="ml-2 text-xs text-muted-foreground/60">
+              {format(new Date(item.updated_at), "yyyy.MM.dd")}
+            </span>
           )}
-        >
-          {item.title}
-        </span>
+        </div>
         <button
           onClick={() => setMemoOpen(!memoOpen)}
           className="text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
