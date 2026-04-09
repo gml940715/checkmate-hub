@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import type { CheckItem } from "@/pages/Index";
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { Check, Trash2 } from "lucide-react";
 
 interface Props {
   item: CheckItem;
   onToggle: (id: string) => void;
   onMemoChange: (id: string, memo: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export const ChecklistCard = ({ item, onToggle, onMemoChange }: Props) => {
