@@ -10,7 +10,7 @@ interface Props {
   onDelete: (id: string) => void;
 }
 
-export const ChecklistCard = ({ item, onToggle, onMemoChange }: Props) => {
+export const ChecklistCard = ({ item, onToggle, onMemoChange, onDelete }: Props) => {
   const [memoOpen, setMemoOpen] = useState(!!item.memo);
   const [localMemo, setLocalMemo] = useState(item.memo);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
