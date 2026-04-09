@@ -22,7 +22,7 @@ export const AddItemForm = ({ onAdded, categories }: Props) => {
     const finalCategory = newCategory.trim() || category;
     if (!title.trim() || !finalCategory) return;
     setSaving(true);
-    await supabase.from("checklist_items").insert({ title: title.trim(), category: finalCategory });
+    await supabase.from("checklist_items").insert({ title: title.trim(), category: finalCategory, user_id: user!.id });
     setTitle("");
     setNewCategory("");
     setSaving(false);
