@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { CheckItem } from "@/pages/Index";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
@@ -11,6 +11,18 @@ interface Props {
 
 export const ChecklistCard = ({ item, onToggle, onMemoChange }: Props) => {
   const [memoOpen, setMemoOpen] = useState(!!item.memo);
+  const [localMemo, setLocalMemo] = useState(item.memo);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    setLocalMemo(item.memo);
+  }, [item.memo]);
+
+  const handleMemoChange = (value: string) => {
+    setLocalMemo(value);
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => onMemoChange(item.id, value), 500);
+  };
 
   return (
     <div
@@ -48,8 +60,8 @@ export const ChecklistCard = ({ item, onToggle, onMemoChange }: Props) => {
       </div>
       {memoOpen && (
         <textarea
-          value={item.memo}
-          onChange={(e) => onMemoChange(item.id, e.target.value)}
+          value={localMemo}
+          onChange={(e) => handleMemoChange(e.target.value)}
           placeholder="메모를 입력하세요..."
           className="mt-3 w-full rounded-lg border bg-muted/50 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none"
           rows={2}
