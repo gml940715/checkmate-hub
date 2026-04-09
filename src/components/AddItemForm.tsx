@@ -3,7 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { Plus, X } from "lucide-react";
-import { Plus, X } from "lucide-react";
 
 interface Props {
   onAdded: () => void;
