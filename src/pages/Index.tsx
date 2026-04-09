@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { ChecklistHeader } from "@/components/ChecklistHeader";
 import { ChecklistFilter } from "@/components/ChecklistFilter";
 import { ChecklistCard } from "@/components/ChecklistCard";
