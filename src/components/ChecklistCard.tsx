@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import type { CheckItem } from "@/pages/Index";
 import { cn } from "@/lib/utils";
 import { Heart, Trash2 } from "lucide-react";
+import { format } from "date-fns";
 
 interface Props {
   item: CheckItem;
