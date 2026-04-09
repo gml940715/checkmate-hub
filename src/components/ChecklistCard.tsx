@@ -58,6 +58,12 @@ export const ChecklistCard = ({ item, onToggle, onMemoChange, onDelete }: Props)
         >
           메모
         </button>
+        <button
+          onClick={() => onDelete(item.id)}
+          className="text-xs text-muted-foreground hover:text-destructive transition-colors p-1 rounded-md hover:bg-destructive/10"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
       </div>
       {memoOpen && (
         <textarea
