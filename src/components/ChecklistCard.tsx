@@ -16,7 +16,7 @@ export const ChecklistCard = ({ item, onToggle, onMemoChange }: Props) => {
     <div
       className={cn(
         "rounded-xl border bg-card p-4 transition-all duration-200",
-        item.checked && "border-primary/30 bg-primary/5"
+        item.checked && "border-primary/20 bg-primary/5 opacity-50"
       )}
     >
       <div className="flex items-center gap-3">
