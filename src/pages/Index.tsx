@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { ChecklistHeader } from "@/components/ChecklistHeader";
 import { ChecklistFilter } from "@/components/ChecklistFilter";
 import { ChecklistCard } from "@/components/ChecklistCard";
+import { AddItemForm } from "@/components/AddItemForm";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface CheckItem {
@@ -21,21 +22,19 @@ const Index = () => {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      const { data, error } = await supabase
-        .from("checklist_items")
-        .select("id, title, category, checked, memo")
-        .order("created_at");
-      if (!error && data) {
-        setItems(data);
-      }
-      setLoading(false);
-    };
-    fetchItems();
-  }, []);
+  const fetchItems = async () => {
+    const { data } = await supabase
+      .from("checklist_items")
+      .select("id, title, category, checked, memo")
+      .order("created_at");
+    if (data) setItems(data);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchItems(); }, []);
 
   const completedCount = items.filter((i) => i.checked).length;
+  const allCategories = [...new Set(items.map((i) => i.category))];
 
   const toggleCollapse = (cat: string) => {
     setCollapsed((prev) => ({ ...prev, [cat]: !prev[cat] }));
@@ -52,6 +51,11 @@ const Index = () => {
   const updateMemo = useCallback(async (id: string, memo: string) => {
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, memo } : i)));
     await supabase.from("checklist_items").update({ memo }).eq("id", id);
+  }, []);
+
+  const deleteItem = useCallback(async (id: string) => {
+    setItems((prev) => prev.filter((i) => i.id !== id));
+    await supabase.from("checklist_items").delete().eq("id", id);
   }, []);
 
   const filtered = items.filter((i) => {
@@ -117,15 +121,17 @@ const Index = () => {
                       item={item}
                       onToggle={toggleCheck}
                       onMemoChange={updateMemo}
+                      onDelete={deleteItem}
                     />
                   ))}
               </div>
             )}
           </div>
         ))}
-        {filtered.length === 0 && (
+        {filtered.length === 0 && items.length > 0 && (
           <p className="text-center text-muted-foreground py-12">해당하는 항목이 없습니다.</p>
         )}
+        <AddItemForm onAdded={fetchItems} categories={allCategories} />
       </div>
     </div>
   );
