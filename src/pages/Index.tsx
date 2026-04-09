@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { ChecklistHeader } from "@/components/ChecklistHeader";
 import { ChecklistFilter } from "@/components/ChecklistFilter";
 import { ChecklistCard } from "@/components/ChecklistCard";
@@ -26,7 +27,12 @@ const Index = () => {
   const [items, setItems] = useState<CheckItem[]>(initialItems);
   const [filter, setFilter] = useState<FilterType>("전체");
 
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const completedCount = items.filter((i) => i.checked).length;
+
+  const toggleCollapse = (cat: string) => {
+    setCollapsed((prev) => ({ ...prev, [cat]: !prev[cat] }));
+  };
 
   const toggleCheck = (id: string) => {
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, checked: !i.checked } : i)));
@@ -51,10 +57,20 @@ const Index = () => {
       <div className="space-y-6 mt-6">
         {categories.map((cat) => (
           <div key={cat}>
-            <div className="flex items-center justify-between mb-3 px-1">
-              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                {cat}
-              </h2>
+            <button
+              onClick={() => toggleCollapse(cat)}
+              className="w-full flex items-center justify-between mb-3 px-1 group"
+            >
+              <div className="flex items-center gap-2">
+                <ChevronDown
+                  className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
+                    collapsed[cat] ? "-rotate-90" : ""
+                  }`}
+                />
+                <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  {cat}
+                </h2>
+              </div>
               {(() => {
                 const catItems = items.filter((i) => i.category === cat);
                 const catDone = catItems.filter((i) => i.checked).length;
@@ -70,19 +86,21 @@ const Index = () => {
                   </div>
                 );
               })()}
-            </div>
-            <div className="space-y-3">
-              {filtered
-                .filter((i) => i.category === cat)
-                .map((item) => (
-                  <ChecklistCard
-                    key={item.id}
-                    item={item}
-                    onToggle={toggleCheck}
-                    onMemoChange={updateMemo}
-                  />
-                ))}
-            </div>
+            </button>
+            {!collapsed[cat] && (
+              <div className="space-y-3">
+                {filtered
+                  .filter((i) => i.category === cat)
+                  .map((item) => (
+                    <ChecklistCard
+                      key={item.id}
+                      item={item}
+                      onToggle={toggleCheck}
+                      onMemoChange={updateMemo}
+                    />
+                  ))}
+              </div>
+            )}
           </div>
         ))}
         {filtered.length === 0 && (
