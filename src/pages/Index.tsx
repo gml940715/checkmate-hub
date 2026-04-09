@@ -6,6 +6,7 @@ import { ChecklistCard } from "@/components/ChecklistCard";
 import { AddItemForm } from "@/components/AddItemForm";
 import { UserHeader } from "@/components/UserHeader";
 import { LoginPage } from "@/components/LoginPage";
+import { CompletionChart } from "@/components/CompletionChart";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -15,6 +16,7 @@ export interface CheckItem {
   title: string;
   checked: boolean;
   memo: string;
+  updated_at: string;
 }
 
 type FilterType = "전체" | "완료" | "미완료";
@@ -30,7 +32,7 @@ const Index = () => {
     if (!user) return;
     const { data } = await supabase
       .from("checklist_items")
-      .select("id, title, category, checked, memo")
+      .select("id, title, category, checked, memo, updated_at")
       .order("created_at");
     if (data) setItems(data);
     setLoading(false);
@@ -66,7 +68,8 @@ const Index = () => {
     const item = items.find((i) => i.id === id);
     if (!item) return;
     const newChecked = !item.checked;
-    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, checked: newChecked } : i)));
+    const now = new Date().toISOString();
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, checked: newChecked, updated_at: now } : i)));
     await supabase.from("checklist_items").update({ checked: newChecked }).eq("id", id);
   };
 
@@ -91,6 +94,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background px-4 py-6 sm:px-6 lg:px-8 max-w-2xl mx-auto">
       <UserHeader />
+      <CompletionChart items={items} />
       <ChecklistHeader completed={completedCount} total={items.length} />
       <ChecklistFilter current={filter} onChange={setFilter} />
       <div className="space-y-6 mt-6">
@@ -125,7 +129,7 @@ const Index = () => {
                             style={{ width: `${Math.round((catDone / catItems.length) * 100)}%` }}
                           />
                         </div>
-                        <span className="text-xs text-muted-foreground">{catDone}/{catItems.length}</span>
+                        <span className="text-xs text-muted-foreground">{catDone}/{catItems.length} ({Math.round((catDone / catItems.length) * 100)}%)</span>
                       </div>
                     );
                   })()}
