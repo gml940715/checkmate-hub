@@ -27,7 +27,12 @@ const Index = () => {
   const [items, setItems] = useState<CheckItem[]>(initialItems);
   const [filter, setFilter] = useState<FilterType>("전체");
 
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const completedCount = items.filter((i) => i.checked).length;
+
+  const toggleCollapse = (cat: string) => {
+    setCollapsed((prev) => ({ ...prev, [cat]: !prev[cat] }));
+  };
 
   const toggleCheck = (id: string) => {
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, checked: !i.checked } : i)));
